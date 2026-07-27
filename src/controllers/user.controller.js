@@ -14,25 +14,25 @@ const registerUser = asyncHandler(async (req, res) => {
     //checks for user creation and return res
 
 
-    const { fullName, email, userName, password } = req.body
+    const { fullName, email, username, password } = req.body
     console.log("email:", email)
 
     if (
-        [fullName, email, userName, password].some((field) =>
+        [fullName, email, username, password].some((field) =>
 
             field?.trim() === "")
     ) {
         throw new ApiError(400, "All fields are required")
     }
-    const existedUser = User.findOne({
-        $or: [{ userName }, { email }]
+    const existedUser = await User.findOne({
+        $or: [{ userName: username }, { email }]
     })
     if (existedUser) {
         throw new ApiError(409, "User already exsits")
     }
 
-    const avatarLocalPath = req.files?.avatar[0]?.path
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    const avatarLocalPath = req.files?.avatar?.[0]?.path
+    const coverImageLocalPath = req.files?.coverImage?.[0]?.path;
 
 
     if (!avatarLocalPath) {
@@ -52,7 +52,7 @@ const registerUser = asyncHandler(async (req, res) => {
         coverImage: coverImage?.url || "",
         email,
         password,
-        username: userName.toLowerCase()
+        userName: username.toLowerCase()
     })
 
     const createdUser = await User.findById(user._id).select(
@@ -62,9 +62,9 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(500, "something wnet wrong while uplading in server")
     }
 
-return res.status(201).json(
-     new ApiResponse(200, createdUser , "user registered successfully")
-)
+    return res.status(201).json(
+        new ApiResponse(200, createdUser, "user registered successfully")
+    )
 
 })
 
