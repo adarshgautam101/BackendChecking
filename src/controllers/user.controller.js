@@ -229,11 +229,14 @@ const changeCurrentPassword = asyncHandler(async (res, req) => {
 
     await user.save({ validateBeforeSave: false })
 
-    return res.status(200).json(new ApiResponse(200, {}, "PassWord changed scuccessfull"))
+    return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "PassWord changed scuccessfull"))
 })
 
 const getCurrentUser = asyncHandler(async (res, req) => {
-    return res.status(200).json(200, req.user, "current usre fetcehed successfull")
+    return res.status(200).json(
+        new ApiResponse(200, req.user, "current usre fetcehed successfull"))
 })
 
 
@@ -315,4 +318,4 @@ const updateUserCoverImg = asyncHandler(async (req, res) => {
         )
 })
 
-export { updateUserCoverImg,updateUserAvatar, updateAccountDetails, registerUser, changeCurrentPassword, loginUser, logOutuser, refreshAccessToken, getCurrentUser }
+export { updateUserCoverImg, updateUserAvatar, updateAccountDetails, registerUser, changeCurrentPassword, loginUser, logOutuser, refreshAccessToken, getCurrentUser }
